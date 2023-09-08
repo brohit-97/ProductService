@@ -2,6 +2,7 @@ package dev.brohit.productservice.controllers;
 
 import dev.brohit.productservice.dtos.GenericProductsRequestDto;
 import dev.brohit.productservice.dtos.GenericProductResponseDto;
+import dev.brohit.productservice.exceptions.NotFoundException;
 import dev.brohit.productservice.services.ProductService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public GenericProductResponseDto getProductById(@PathVariable Long id){
+    public GenericProductResponseDto getProductById(@PathVariable Long id) throws NotFoundException {
         return productService.getProductById(id);
     }
 

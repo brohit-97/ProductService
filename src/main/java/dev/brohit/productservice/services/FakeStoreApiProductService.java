@@ -3,6 +3,7 @@ package dev.brohit.productservice.services;
 import dev.brohit.productservice.dtos.FakeStoreApiProductDto;
 import dev.brohit.productservice.dtos.GenericProductResponseDto;
 import dev.brohit.productservice.dtos.GenericProductsRequestDto;
+import dev.brohit.productservice.exceptions.NotFoundException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,10 +46,10 @@ public class FakeStoreApiProductService implements ProductService{
     }
 
     @Override
-    public GenericProductResponseDto getProductById(Long id) {
+    public GenericProductResponseDto getProductById(Long id) throws NotFoundException {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreApiProductDto> response = restTemplate.getForEntity(urlByProductById, FakeStoreApiProductDto.class, id);
-        if(response.getStatusCode() == HttpStatus.OK){
+        if(response.getStatusCode() == HttpStatus.OK && response.getBody() != null){
              FakeStoreApiProductDto fakeStoreApiProductDto = response.getBody();
             return GenericProductResponseDto.builder()
                      .id(fakeStoreApiProductDto.getId())
@@ -58,8 +59,10 @@ public class FakeStoreApiProductService implements ProductService{
                      .price(fakeStoreApiProductDto.getPrice())
                      .category(fakeStoreApiProductDto.getCategory())
                      .build();
+        }else{
+            throw new NotFoundException("Product with id " + id + " not found");
         }
-        return null;
+
     }
 
     @Override

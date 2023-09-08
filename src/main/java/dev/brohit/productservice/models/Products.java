@@ -1,5 +1,8 @@
 package dev.brohit.productservice.models;
 
+import lombok.Getter;
+
+@Getter
 public class Products extends BaseModel{
 
     private String title;
