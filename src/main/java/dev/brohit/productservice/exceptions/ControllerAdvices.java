@@ -17,4 +17,12 @@ public class ControllerAdvices {
                 .build();
         return new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);
     }
+
+    public  ResponseEntity<ExceptionDto> handleEntityCreationFailed(EntityCreationFailed entityCreationFailed){
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+                .message(entityCreationFailed.getMessage())
+                .status(HttpStatus.EXPECTATION_FAILED)
+                .build();
+        return new ResponseEntity<>(exceptionDto, HttpStatus.EXPECTATION_FAILED);
+    }
 }

@@ -2,6 +2,7 @@ package dev.brohit.productservice.controllers;
 
 import dev.brohit.productservice.dtos.GenericProductsRequestDto;
 import dev.brohit.productservice.dtos.GenericProductResponseDto;
+import dev.brohit.productservice.exceptions.EntityCreationFailed;
 import dev.brohit.productservice.exceptions.NotFoundException;
 import dev.brohit.productservice.services.ProductService;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<GenericProductResponseDto> getAllProducts(){
+    public List<GenericProductResponseDto> getAllProducts() throws NotFoundException{
         return productService.getAllProducts();
     }
 
@@ -29,7 +30,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public GenericProductResponseDto createProduct(@RequestBody GenericProductsRequestDto genericProductsRequestDto){
+    public GenericProductResponseDto createProduct(@RequestBody GenericProductsRequestDto genericProductsRequestDto) throws EntityCreationFailed {
         return productService.createProduct(genericProductsRequestDto);
     }
 
