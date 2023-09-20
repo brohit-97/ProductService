@@ -53,7 +53,7 @@ public class FakeStoreApiProductService implements ProductService {
 
     public GenericProductResponseDto convertFakeStoreApiProductDtoToGenericProductResponseDto(FakeStoreApiProductDto fakeStoreApiProductDto){
         return GenericProductResponseDto.builder()
-                .id(fakeStoreApiProductDto.getId())
+                .id(fakeStoreApiProductDto.getId().toString())
                 .title(fakeStoreApiProductDto.getTitle())
                 .description(fakeStoreApiProductDto.getDescription())
                 .imageUrl(fakeStoreApiProductDto.getImage())

@@ -5,17 +5,19 @@ import dev.brohit.productservice.dtos.GenericProductResponseDto;
 import dev.brohit.productservice.exceptions.EntityCreationFailed;
 import dev.brohit.productservice.exceptions.NotFoundException;
 import dev.brohit.productservice.services.ProductService;
+import dev.brohit.productservice.services.ProductServiceDBBased;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 
-    ProductService productService;
+    ProductServiceDBBased productService;
 
-    public ProductController( ProductService productService){
+    public ProductController( ProductServiceDBBased productService){
         this.productService = productService;
     }
 
@@ -25,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public GenericProductResponseDto getProductById(@PathVariable Long id) throws NotFoundException {
+    public GenericProductResponseDto getProductById(@PathVariable UUID id) throws NotFoundException {
         return productService.getProductById(id);
     }
 
@@ -35,13 +37,13 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProductById(@PathVariable Long id){
+    public void deleteProductById(@PathVariable UUID id){
          productService.deleteProductById(id);
 
     }
 
     @PutMapping("/{id}")
-    public void updateProductById(@PathVariable Long id, @RequestBody GenericProductsRequestDto genericProductsRequestDto){
+    public void updateProductById(@PathVariable UUID id, @RequestBody GenericProductsRequestDto genericProductsRequestDto){
          productService.updateProductById(id, genericProductsRequestDto);
     }
 }

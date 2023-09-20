@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class GenericProductResponseDto {
-    private Long id;
+    private String id;
     private String title;
     private String description;
     private double price;
