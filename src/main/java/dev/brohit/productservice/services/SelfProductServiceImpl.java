@@ -4,7 +4,9 @@ import dev.brohit.productservice.dtos.GenericProductResponseDto;
 import dev.brohit.productservice.dtos.GenericProductsRequestDto;
 import dev.brohit.productservice.exceptions.EntityCreationFailed;
 import dev.brohit.productservice.exceptions.NotFoundException;
+import dev.brohit.productservice.models.Category;
 import dev.brohit.productservice.models.Product;
+import dev.brohit.productservice.repositories.CategoryRepository;
 import dev.brohit.productservice.repositories.ProductRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,11 @@ public class SelfProductServiceImpl implements ProductServiceDBBased{
 
     ProductRepository productRepository;
 
-    public SelfProductServiceImpl(ProductRepository productRepository){
+    CategoryRepository categoryRepository;
+
+    public SelfProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository){
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -41,11 +46,18 @@ public class SelfProductServiceImpl implements ProductServiceDBBased{
 
     @Override
     public GenericProductResponseDto createProduct(GenericProductsRequestDto genericProductsRequestDto) throws EntityCreationFailed {
+        Category category = categoryRepository.findByName(genericProductsRequestDto.getCategory());
+        if(category == null){
+            category = new Category();
+            category.setName(genericProductsRequestDto.getCategory());
+            categoryRepository.save(category);
+        }
         Product product = Product.builder()
                 .title(genericProductsRequestDto.getTitle())
                 .description(genericProductsRequestDto.getDescription())
                 .imageUrl(genericProductsRequestDto.getImageUrl())
                 .price(genericProductsRequestDto.getPrice())
+                .category(category)
                 .build();
         productRepository.save(product);
         return convertProductToGenericProductResponseDto(product);
@@ -63,6 +75,13 @@ public class SelfProductServiceImpl implements ProductServiceDBBased{
         product.setDescription(genericProductsRequestDto.getDescription());
         product.setImageUrl(genericProductsRequestDto.getImageUrl());
         product.setPrice(genericProductsRequestDto.getPrice());
+        Category category = categoryRepository.findByName(genericProductsRequestDto.getCategory());
+        if(category == null){
+            category = new Category();
+            category.setName(genericProductsRequestDto.getCategory());
+            categoryRepository.save(category);
+        }
+        product.setCategory(category);
         productRepository.save(product);
 
     }
@@ -70,6 +89,7 @@ public class SelfProductServiceImpl implements ProductServiceDBBased{
     public GenericProductResponseDto convertProductToGenericProductResponseDto(Product product){
         return GenericProductResponseDto.builder()
                 .title(product.getTitle())
+                .id(product.getId().toString())
                 .description(product.getDescription())
                 .imageUrl(product.getImageUrl())
                 .price(product.getPrice())
